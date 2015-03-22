@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi ,initial-scale= 0.5"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="Author" content="贱圈" />
+    <link href="scripts/css/vote.css" rel="stylesheet">
+    <link href="scripts/css/jquery.mobile-1.4.5.min.css" rel="stylesheet">
+    <link href="scripts/js/jquery.mobile-1.4.5.min.js">
+    <script src="scripts/js/jquery-1.9.1.min.js"></script>
+    <script src="scripts/js/vote.js"></script>
+    <title>山东十大杰出青年投票</title>
+</head>
+<body>
+    <header id="index_header">山东十大杰出青年投票</header>
+    <section id="index_main">
+        <header id="login_header"></header>
+        <form method="post">
+            <div id="login_box-bg">
+                <fieldset class="login_box_part" data-role="fieldcontain">
+                    <div class="ui-select" style="margin: 0; padding-top: 45px;">
+                        <div class="ui-btn" id="login_type">
+                            <span id="login_arrow">请选择登陆方式</span>
+                            <select name="login_type">
+                                <option value="mon">星期一</option>
+                                <option value="tue">星期二</option>
+                                <option value="wed">星期三</option>
+                                <option value="thu">星期四</option>
+                            </select>
+                        </div>
+                    </div>
+                </fieldset>
+                <a class="login_box_part">
+                    <input type="text" placeholder="用户名">
+                </a>
+                <a class="login_box_part" style="border: 0">
+                    <input type="password" placeholder="密码">
+                </a>
+            </div>
+            <div id="rmb_pass">
+                <input type="checkbox" checked="true">
+                <a href="javascript:void(0)">记住密码</a>
+                <a class="right" href="javascript:void(0)">注册账户</a>
+                <a class="right">/</a>
+                <a class="right" href="javascript:void(0)">忘记密码</a>
+            </div>
+            <button type="submit" id="login_submit">登陆</button>
+        </form>
+    </section>
+</body>
+</html>
