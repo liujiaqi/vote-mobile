@@ -16,4 +16,11 @@
 			return $query;
 		}
 	}
+    
+    function poststr($key){
+        return mysql_real_escape_string(HTMLSpecialChars(isset($_POST[$key]) ? $_POST[$key] : ""));
+    }
+    function postint($key){
+        return intval(isset($_POST[$key]) ? $_POST[$key] : 0);
+    }
 ?>

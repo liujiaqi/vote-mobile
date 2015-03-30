@@ -14,7 +14,7 @@
             if($now < $parameter['endtime']){
                 $tname = isset($_POST["name"])?$_POST["name"]:"";
                 $tpwd = isset($_POST["pwd"])?$_POST["pwd"]:"";
-                $sql = "select password,id from user where name = '".$_POST['name']."'";
+                $sql = "select password,id from user where name = '".$_POST['name']."' and state = 1";
                 $result = query($sql);
                 if ($row = mysql_fetch_array($result)) {
                     if($row['password'] == md5($tpwd)){
@@ -83,11 +83,14 @@
                 if($row['count(*)'] == 0){
                     if(count($_POST['cid']) == $parameter['total']){
                         $vals = array();
+                        $cids = array();
                         foreach($_POST['cid'] as $cid){
                             $vals[] = "(".$uid.",".intval($cid).", now(), '".$user_ip."')";
+                            $cids[]= intval($cid);
                         }
-                        $sql = "insert into vote values ".implode(",", $vals);
-                        if(query($sql)){
+                        $sql1 = "update candidate set poll = poll+1 where id in (".implode(",", $cids).")";
+                        $sql2 = "insert into vote values ".implode(",", $vals);
+                        if(query($sql1)&&query($sql2)){
                             session_destroy();?>
             <div id="cons_logo"><img width="165" height="165" src="images/cons_co.png"></div>
             <div id="cons_words">您的投票已提交成功</div>
