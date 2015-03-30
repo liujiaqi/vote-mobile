@@ -1,0 +1,263 @@
+*{
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+li {
+    list-style: none;
+}
+
+#index_header {
+    width: 100%;
+    min-width: 480px;
+    height: 107px;
+    font: 35px/110px 微软雅黑;
+    text-align: center;
+    color: #ffffff;
+    background-color: #2cacdb;
+}
+#index_main {
+    width: 100%;
+    min-width: 480px;
+    height: 100%;
+    background: url("../../images/index-bg.png")  top center no-repeat;
+    background-size: cover;
+    position: absolute;
+}
+#login_header {
+    width: 37%;
+    height: 72px;
+    margin: 0 auto;
+    background: url("../../images/index-login.png") top center no-repeat;
+    background-size: contain;
+    margin-top: 54px;
+    margin-bottom: 38px;
+}
+#login_box-bg {
+    width: 78%;
+    height: 358px;
+    margin: 0 auto;
+    border-radius: 8px;
+    background-color: #ffffff;
+    opacity: 0.87;
+ }
+.login_box_part {
+    width: 84.6%;
+    height: 120px;
+    line-height: 120px;
+    padding-left: 15.4%;
+    border-bottom: 1px solid #afafaf;
+    background:url("../../images/index-login_icon1.png") 5.5% center no-repeat;
+}
+#login_type {
+    font: 24px/30px 黑体;
+    border: 0;
+    padding: 0;
+    text-align: left;
+}
+.login_box_part input {
+    height: 30px;
+    font: 24px/30px 黑体;
+}
+#login_arrow {
+    background: url("../../images/index-login_icon4.png") 89.8% 6px no-repeat;
+}
+#login_type select option {
+    width: 100%;
+    height: 30px;
+    font: 24px/30px 黑体;
+    cursor: pointer;
+}
+#rmb_pass {
+    margin: 23px 12.5% 30px 16.4%;
+}
+#rmb_pass input {
+    cursor: pointer;
+}
+#rmb_pass span {
+    font: 24px/21px 黑体;
+    color: #ff0000;
+}
+#rmb_pass a {
+    font: 24px/21px 黑体;
+    color: #ffffff;
+    display: inline-block;
+}
+.right {
+    float:right;
+}
+#login_submit {
+    width: 78%;
+    height: 73px;
+    margin: 0 auto;
+    text-align: center;
+    font: 34px/73px 黑体;
+    color: #ffffff;
+    background: #2cacdb;
+    border-radius: 8px;
+    display: block;
+    cursor: pointer;
+}
+#list_footer {
+    width: 100%;
+    height: 140px;
+    line-height: 140px;
+    text-align: center;
+    background: #2cacdb;
+    position: fixed;
+    bottom: 0;
+}
+.list_footer_btn {
+    width: 37.5%;
+    height: 74px;
+    background: #017daa;
+    border: 1px solid #00648d;
+    border-radius: 8px;
+    font: 26px/74px 微软雅黑;
+    color: #ffffff;
+    cursor: pointer;
+    position: absolute;
+    top: 23.6%;
+    left: 31.25%;
+}
+#list_footer_btn1 {
+    width: 37.35%;
+    height: 72px;
+    cursor: text;
+    z-index: 10;
+}
+#list_main {
+    width: 100%;
+}
+#list_main ul {
+    width: 87.5%;
+    height: 100%;
+    margin: 0 auto;
+    padding: 5px 0 80px 0;
+}
+#list_main ul li {
+    height: 210px;
+    padding: 30px 0;
+    border-top: 1px solid #e8e8e8;
+}
+.list_main_photo {
+    width: 96px;
+    height: 137px;
+    border-width: 6px 5px;
+    border-style: solid;
+    border-color: #2cacdb;
+    float: left;
+}
+.list_main_short {
+    width: 60%;
+    height: 135px;
+    margin: 15px 15px 20px 15px;
+    float: left;
+}
+.list_main_short_header {
+    height: 36px;
+    font: 28px/36px 微软雅黑;
+}
+.list_main_short_body {
+    width: 100%;
+    height: 72px;
+    font: 18px/24px 微软雅黑;
+    word-wrap: break-word;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.list_main_more {
+    text-decoration: underline;
+    color: #0060ff;
+    display: inline;
+}
+.list_main_btn {
+    width: 14%;
+    height: 36px;
+    border-width: 4px 3px;
+    border-style: solid;
+    border-color: #2cacdb;
+    margin-top: 55px;
+    cursor: pointer;
+    float: left;
+}
+.list_main_btn_slide {
+    width: 70%;
+    height: 100%;
+    background-color: #2cacdb;
+    background-repeat: no-repeat;
+    background-position: center;
+    color: #ffffff;
+    margin-left: 30%;
+}
+.vote_select {
+    background-image: url("../../images/no.png");
+}
+.vote_selected {
+    background-image: url("../../images/yes.png");
+}
+#passage_header {
+    position: absolute;
+    left: 3%;
+}
+#passage_header_body {
+    width: 86.3%;
+    min-height: 500px;
+    margin: auto;
+    padding: 12px 15px 25px 15px;
+    margin-top: 36px;
+    border: 1px solid #e5e4e4;
+    background-color: #ffffff;
+}
+#passage_header_body_photo {
+    width: 143px;
+    height: 204px;
+    margin: 0 15px 0 0;
+    border-width: 10px 7px;
+    border-style: solid;
+    border-color: #2cacdb;
+    float: left;
+}
+.passage_main_short_header {
+    height: 36px;
+    font: 28px/36px 微软雅黑;
+    margin-top: 20px;
+}
+.passage_main_short_body {
+    font: 18px/30px 微软雅黑;
+    word-wrap: break-word;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+#passage_main_short_body_up {
+    max-height: 180px;
+}
+#cons_logo {
+    width: 165px;
+    height: 165px;
+    margin: 0 auto;
+    padding-top: 267px;
+}
+#cons_words {
+    height: 54px;
+    margin: 0 auto;
+    padding: 55px 0 42px 0;
+    text-align: center;
+    font: 54px/54px 微软雅黑;
+    color: #2cacdb;
+}
+#cons_back {
+    width: 240px;
+    height: 76px;
+    border-radius: 8px;
+    background-color: #2cacdb;
+    font: 40px/76px 微软雅黑;
+    color: #ffffff;
+    text-align: center;
+    cursor: pointer;
+}
