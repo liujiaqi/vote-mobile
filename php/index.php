@@ -70,7 +70,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <meta name="format-detection" content="telephone=no" />
     <meta name="Author" content="贱圈 -TiH-liujiaqi" />
+    <script src="scripts/js/jquery-1.7.2.min.js"></script>
     <link href="scripts/css/vote.css" rel="stylesheet">
+    <script src="scripts/js/vote.js" type="text/javascript"></script>
     <title><?php echo $parameter['title'];?></title>
 </head>
 <body>
@@ -104,7 +106,7 @@
 <?php               }
                 }else{session_destroy();?>
             <div id="cons_logo"><img width="165" height="165" src="images/cons_inco.png"></div>
-            <div id="cons_words">对不起，不能重复投票</div>
+            <div id="cons_words">您已经投过票啦</div>
 <?php           }
             }
         }else{?>
@@ -116,8 +118,6 @@
     </div>
 <?php }else if(isset($_SESSION['uid'])){?>
     <script type="text/javascript">var total = <?php echo $parameter['total'];?>;</script>
-    <script src="scripts/js/jquery-1.7.2.min.js"></script>
-    <script src="scripts/js/vote.js"></script>
     <section id="list_main">
         <ul>
 <?php   $result = query("select * from candidate");

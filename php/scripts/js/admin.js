@@ -19,18 +19,20 @@ function add_user(){
     $(".user-list").prepend($(".user-template").clone().removeClass("user-template").css("display","block"));
 }
 
-var toupimg, toupinp;
+var upimgbtn;
 function up_photo(btn){
+    upimgbtn = $(btn).button("loading").removeClass("btn-default").removeClass("btn-error").removeClass("btn-success").addClass("btn-info");
     $('#file').click();
-    toupimg = $(btn).parent().find("img");
-    toupinp = $(btn).parent().find("input[name='photo']");
 }
 //<script>parent.up_back('OK','201501010000.png');</script>
 function up_back(info, src){
     if(info == "OK"){
-        toupimg.attr("src", "photo/"+src);
-        toupinp.val(src);
+        upimgbtn.button("success").removeClass("btn-default").removeClass("btn-error").removeClass("btn-info").addClass("btn-success");
+        upimgbtn.parent().find("img").attr("src", "photo/"+src);
+        upimgbtn.parent().find("input[name='photo']").val(src);
     }else{
+        upimgbtn.button("error").removeClass("btn-default").removeClass("btn-success").removeClass("btn-info").addClass("btn-error");
+        alert(info);
         console.log(info);
     }
 }

@@ -65,7 +65,7 @@
                 <label for="total-per">每人投票数</label>
                 <input type="number" id="total-per" name="total" class="form-control" placeholder="每人投票数" <?php if(isset($parameter['total'])) echo 'value="'.$parameter['total'].'"'; ?> required>
                 <label for="begin-time">开始时间</label>
-                <input type="text" id="begin-time" name="begintime" class="form-control form_datetime"<?php if(isset($parameter['begintime'])) echo 'value="'.$parameter['begintime'].'"'; ?> >
+                <input type="text" id="begin-time" name="begintime" class="form-control form_datetime" <?php if(isset($parameter['begintime'])) echo 'value="'.$parameter['begintime'].'"'; ?> >
                 <label for="end-time">结束时间</label>
                 <input type="text" id="end-time" name="endtime" class="form-control form_datetime" <?php if(isset($parameter['endtime'])) echo 'value="'.$parameter['endtime'].'"'; ?> >
                 <button class="btn btn-sm btn-success" name="param" type="submit">保存</button>
@@ -95,8 +95,8 @@
                                 <input type="hidden" name="method" value="addcand">
                                 <input type="hidden" name="cid">
                                 <img class="img-thumbnail" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxkZWZzLz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjczLjUiIHk9IjEwMCIgc3R5bGU9ImZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMHB0O2RvbWluYW50LWJhc2VsaW5lOmNlbnRyYWwiPjIwMHgyMDA8L3RleHQ+PC9nPjwvc3ZnPg==" data-holder-rendered="true">
-                                <input type="hidden" name="photo" value="index-bg.png" onchange="modi_updatebtn(this)">
-                                <button class="btn btn-sm btn-default" type="button" onclick="up_photo(this);">上传</button>
+                                <input type="hidden" name="photo" value="" onchange="modi_updatebtn(this)">
+                                <button class="btn btn-sm btn-default" autocomplete="off" data-loading-text="上传中..." data-success-text="上传成功" data-error-text="上传失败" type="button" onclick="up_photo(this);">上传</button>
                             </div>
                             <div class="col-lg-3">
                                 <input type="text" class="form-control cand-name" name="name" placeholder="姓名" onchange="modi_updatebtn(this)" required>
@@ -124,7 +124,7 @@
                                 <input type="hidden" name="cid" value="<?php echo $row['id'];?>" >
                                 <img class="img-thumbnail"  src="photo/<?php echo $row['photo'];?>" data-holder-rendered="true">
                                 <input type="hidden" name="photo" value="<?php echo $row['photo'];?>" onchange="modi_updatebtn(this)">
-                                <button class="btn btn-sm btn-default" type="button" onclick="up_photo(this);">上传</button>
+                                <button class="btn btn-sm btn-default" autocomplete="off" data-loading-text="上传中..." data-success-text="上传成功" data-error-text="上传失败" type="button" onclick="up_photo(this);">上传</button>
                             </div>
                             <div class="col-lg-3">
                                 <input type="text" class="form-control cand-name" value="<?php echo $row['name'];?>" placeholder="姓名" name="name" onchange="modi_updatebtn(this)" required>

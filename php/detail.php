@@ -16,11 +16,10 @@
     <meta name="viewport" content="width=device-width, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi ,initial-scale= 0.5"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <meta name="format-detection" content="telephone=no" />
-    <meta name="Author" content="贱圈" />
+    <meta name="Author" content="贱圈 -TiH-liujiaqi" />
+    <script src="scripts/js/jquery-1.7.2.min.js"></script>
     <link href="scripts/css/vote.css" rel="stylesheet">
-    <link href="scripts/css/jquery.mobile-1.4.5.min.css" rel="stylesheet">
-    <link href="scripts/js/jquery.mobile-1.4.5.min.js">
-    <script src="scripts/js/vote.js"></script>
+    <script src="scripts/js/vote.js" type="text/javascript"></script>
     <title><?php echo $parameter['title'];?></title>
 </head>
 <body style="background-color: #fbfbfb">

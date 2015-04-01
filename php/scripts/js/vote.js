@@ -45,11 +45,11 @@ $(document).ready(function () {
     var densityDpi = 640 / winWidths;
     densityDpi = densityDpi > 1 ? 300 * 640 * densityDpi / 640 : densityDpi;
     if (isWeixin()) {
-        viewport.setAttribute('content', 'width=640, target-densityDpi='+densityDpi);
+        viewport.setAttribute('content', 'width=640, user-scalable=no,  maximum-scale=1, target-densityDpi='+densityDpi);
     } else {
-        viewport.setAttribute('content', 'width=640, user-scalable=no');
+        viewport.setAttribute('content', 'width=640, user-scalable=no,  maximum-scale=1');
         window.setTimeout(function () {
-            viewport.setAttribute('content', 'width=640, user-scalable=yes');
+            viewport.setAttribute('content', 'width=640, user-scalable=no,  maximum-scale=1');
         }, 1000);
     }
     function isWeixin() {

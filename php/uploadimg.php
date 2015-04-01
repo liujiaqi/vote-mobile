@@ -6,9 +6,7 @@
 $inputName='file';//表单文件域name
 $attachDir='photo';//上传文件保存路径，结尾不要带/
 
-$dirType = 1;//1:按天存入目录 2:按月存入目录 3:按扩展名存目录  建议使用按天存
 $upExt = 'jpg,jpeg,gif,png,bmp';//上传扩展名
-$msgType = 2;//返回上传参数的格式：1，只返回url，2，返回参数数组
 ini_set('date.timezone','Asia/Shanghai');//时区
 
 $err = "";
@@ -80,5 +78,5 @@ if($err==''){
 
 if($err==""){
     echo "<script>parent.up_back('OK','".$tem."');</script>";
-}else echo "<script>parent.up_back('ERR','');</script>";
+}else echo "<script>parent.up_back('".$err."','');</script>";
 ?>
