@@ -68,6 +68,7 @@
                 <input type="text" id="begin-time" name="begintime" class="form-control form_datetime" <?php if(isset($parameter['begintime'])) echo 'value="'.$parameter['begintime'].'"'; ?> >
                 <label for="end-time">结束时间</label>
                 <input type="text" id="end-time" name="endtime" class="form-control form_datetime" <?php if(isset($parameter['endtime'])) echo 'value="'.$parameter['endtime'].'"'; ?> >
+                <a class="btn btn-sm btn-info" href="export.php" target="_blank">调查结果</a>
                 <button class="btn btn-sm btn-success" name="param" type="submit">保存</button>
                 <button class="btn btn-sm btn-danger" type="button" onclick="logout()">取消</button>
             </form>
