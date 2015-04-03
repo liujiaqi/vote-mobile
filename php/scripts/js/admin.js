@@ -141,3 +141,56 @@ function del_usr(btn){
         });
     }
 }
+
+
+function clr_usr(btn){
+    if(confirm("确定清除该用户的投票信息？")){
+        var usr_item = $(btn).button("loading").parent().parent();
+        usr_item.find("input[name='method']").val("clrusr");
+        var usrdata = usr_item.find("form").serialize();
+        $.ajax({
+                type: "POST",
+                async: false,
+                url: "admin_ajax.php",
+                data: usrdata,
+                success: function (resp) {
+                    if(resp.indexOf("T:")==0){
+                        $(btn).button("success").removeClass("btn-danger").addClass("btn-success");
+                    }
+                    else{
+                        $(btn).button("error").removeClass("btn-success").addClass("btn-danger");
+                        console.log(resp); 
+                    }
+                },
+                error:function (resp){ 
+                    $(btn).button("error").removeClass("btn-success").addClass("btn-danger");
+                    console.log(resp); 
+                }
+        });
+    }
+}
+
+
+function flush(){
+    if(confirm("确定清除所有投票信息？")){
+        $.ajax({
+                type: "POST",
+                async: false,
+                url: "admin_ajax.php",
+                data: "method=flush",
+                success: function (resp) {
+                    if(resp.indexOf("T:")==0){
+                        alert("清除成功！");
+                    }
+                    else{
+                        alert("清除失败！");
+                        console.log(resp); 
+                    }
+                },
+                error:function (resp){ 
+                    alert("清除失败！");
+                    console.log(resp); 
+                }
+        });
+    }
+}

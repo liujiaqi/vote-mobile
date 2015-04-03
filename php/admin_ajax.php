@@ -11,6 +11,12 @@
                     session_destroy();
                     break;
                     
+                case "flush":
+                    if(!query("update `vote` set state = 0")) die("清除用户投票数据失败！");
+                    if(!query("update `candidate` set poll = 0")) die("重置投票数据失败！");
+                    else echo "T:";
+                    break;
+                    
                 case "addcand":
                     $name = poststr('name');
                     $summary = poststr('summary');
@@ -72,6 +78,12 @@
                 case "delusr":
                     $uid = postint('uid');
                     if(!query("update `user` set state = 0 where id = $uid")) die("删除用户失败！");
+                    else echo "T:";
+                    break;
+                    
+                case "clrusr":
+                    $uid = postint('uid');
+                    if(!query("update `vote` set state = 0 where uid = $uid")) die("清除用户数据失败！");
                     else echo "T:";
                     break;
 

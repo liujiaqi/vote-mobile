@@ -58,7 +58,7 @@
     $objPHPExcel ->createSheet();
     $objPHPSheet = $objPHPExcel->getSheet(1);
     
-    $result = query("select count(*) as nvote, (select count(*) from candidate where state =1) as ncandi, (select count(distinct uid) from vote) as nvoteu, (select count(*) from `user` where state =1)  as nuser  from vote");
+    $result = query("select count(*) as nvote, (select count(*) from candidate where state =1) as ncandi, (select count(distinct uid) from vote where state =1) as nvoteu, (select count(*) from `user` where state =1)  as nuser  from vote  where state =1");
     $row = mysql_fetch_array($result);
     
     $objPHPSheet ->setTitle('投票数据')
@@ -98,7 +98,7 @@
     $objPHPSheet ->getStyle('E5')->getFont()->setBold(true);
     $objPHPSheet ->getStyle('F5')->getFont()->setBold(true);
 
-    $result = query("select uid,realname, cid,candidate.name,`time`,vote.ip from vote left join `user` on vote.uid = `user`.id  left join candidate on vote.cid = candidate.id");
+    $result = query("select uid,realname, cid,candidate.name,`time`,vote.ip from vote left join `user` on vote.uid = `user`.id  left join candidate on vote.cid = candidate.id where vote.state =1");
     $i = 6;
     while($row = mysql_fetch_array($result)){
         $objPHPSheet ->setCellValue("A$i", $row["uid"])

@@ -70,7 +70,8 @@
                 <input type="text" id="end-time" name="endtime" class="form-control form_datetime" <?php if(isset($parameter['endtime'])) echo 'value="'.$parameter['endtime'].'"'; ?> >
                 <a class="btn btn-sm btn-info" href="export.php" target="_blank">调查结果</a>
                 <button class="btn btn-sm btn-success" name="param" type="submit">保存</button>
-                <button class="btn btn-sm btn-danger" type="button" onclick="logout()">取消</button>
+                <button class="btn btn-sm btn-warning" type="button" onclick="logout()">取消</button>
+                <button class="btn btn-sm btn-danger" type="button" onclick="flush()">清空</button>
             </form>
         </div>
     </nav>
@@ -189,11 +190,10 @@
                         </div>
                     </div>
 
-<?php   $result = query("select * from user where state = 1 and id <>1");
+<?php   $result = query("select * from user where state = 1");
              while($row = mysql_fetch_array($result)){?>
                     <div class="list-group-item">
                         <div class="row">
-                            <div class="col-lg-1"></div>
                             <div class="col-lg-9 form-inline">
                               <form>
                                 <input type="hidden" name="method" value="modiusr" >
@@ -206,9 +206,10 @@
                                 <input type="password" name="pwd" class="form-control userinfo" placeholder="密码" onchange="modi_updatebtn(this)" ></label>
                               </form>
                             </div>
-                            <div class="col-lg-2">
+                            <div class="col-lg-3">
                                 <button type="button" data-loading-text="保存中..." data-success-text="保存成功" data-error-text="保存失败" class="btn btn-primary save_btn" autocomplete="off" onclick="up_usr(this)">保存</button>
                                 <button class="btn btn-danger" type="button" onclick="del_usr(this)">删除</button>
+                                <button type="button" data-loading-text="清除中..." data-success-text="清除成功" data-error-text="清除失败" class="btn btn-danger" autocomplete="off" onclick="clr_usr(this)">清除投票数据</button>
                             </div>
                         </div>
                     </div>

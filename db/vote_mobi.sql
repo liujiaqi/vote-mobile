@@ -72,9 +72,31 @@ CREATE TABLE IF NOT EXISTS `vote` (
   `cid` int(11) NOT NULL,
   `time` datetime NOT NULL,
   `ip` varchar(20) NOT NULL,
+  `state` tinyint(2) NOT NULL DEFAULT '1',
   KEY `uid` (`uid`,`cid`),
   KEY `cid` (`cid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- 触发器 `vote`
+--
+DROP TRIGGER IF EXISTS `addvote`;
+DELIMITER //
+CREATE TRIGGER `addvote` AFTER INSERT ON `vote`
+ FOR EACH ROW update candidate set poll=poll+1 where id=new.cid
+//
+DELIMITER ;
+DROP TRIGGER IF EXISTS `delvote`;
+DELIMITER //
+CREATE TRIGGER `delvote` AFTER UPDATE ON `vote`
+ FOR EACH ROW begin 
+set @poll=(select poll from candidate where id = new.cid);
+if @poll<>0 and old.state=1 and new.state=0 then
+    update candidate set poll=poll-1 where id=new.cid;
+end if;
+end
+//
+DELIMITER ;
 
 --
 -- 限制导出的表
@@ -84,8 +106,8 @@ CREATE TABLE IF NOT EXISTS `vote` (
 -- 限制表 `vote`
 --
 ALTER TABLE `vote`
-  ADD CONSTRAINT `vote_ibfk_2` FOREIGN KEY (`cid`) REFERENCES `candidate` (`id`),
-  ADD CONSTRAINT `vote_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `user` (`id`);
+  ADD CONSTRAINT `vote_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `vote_ibfk_2` FOREIGN KEY (`cid`) REFERENCES `candidate` (`id`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
