@@ -45,7 +45,8 @@ body {
 #vote-name { width:200px; }
 #total-per { width:60px; }
 .cand-name { width: 100px; }
-.uid { width:70px; }
+
+.list-group-item .form-inline .userinfo { width:180px; }
 
 .list-group { margin-bottom:0; }
 .pagination { margin-bottom:0; float:right; }

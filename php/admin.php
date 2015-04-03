@@ -1,4 +1,7 @@
 <?php
+    $cperpage = 5;
+    $uperpage = 10;
+    
     session_start();
 	//error_reporting(E_ALL);
 	ini_set('display_errors', '1');
@@ -9,7 +12,26 @@
     }
     
     if(isset($_SESSION['admin'])){
+
         require_once("db.php");
+
+        $cpage = intval($_GET['cpage']);
+        if (($cpage==NULL) || ($cpage < 1)) $cpage = 1;
+        $res = mysql_query("select count(*) from candidate where state = 1");
+        $row = mysql_fetch_array($res);
+        $total = $row['count(*)'];
+        $ctotle_page = ceil($total/$cperpage);
+        if ($cpage > $ctotle_page) $cpage = $ctotle_page;
+        $cbegin = $cperpage * ($cpage - 1);
+        
+        $upage = intval($_GET['upage']);
+        if (($upage==NULL) || ($upage < 1)) $upage = 1;
+        $res = mysql_query("select count(*) from user where state = 1");
+        $row = mysql_fetch_array($res);
+        $total = $row['count(*)'];
+        $utotle_page = ceil($total/$uperpage);
+        if ($upage > $utotle_page) $upage = $utotle_page;
+        $ubegin = $uperpage * ($upage - 1);
         
         if(isset($_POST['param'])){
             $title = mysql_real_escape_string(HTMLSpecialChars(isset($_POST['title']) ? $_POST['title'] : ""));
@@ -25,7 +47,14 @@
         $parameter = mysql_fetch_array($result);
     }
     
-    
+    function url($cpage,$upage){
+        global $ctotle_page, $utotle_page;
+        if($cpage < 1) $cpage = 1;
+        if ($cpage > $ctotle_page) $cpage = $ctotle_page;
+        if($upage < 1) $upage = 1;
+        if ($upage > $utotle_page) $upage = $utotle_page;
+        return $_SERVER['PHP_SELF']."?cpage=$cpage&upage=$upage";
+    }
     
 ?>
 <!DOCTYPE html>
@@ -116,7 +145,7 @@
                     </div>
                 
 
-<?php   $result = query("select * from candidate where state = 1");
+<?php   $result = query("select * from candidate where state = 1 limit $cbegin, $cperpage");
              while($row = mysql_fetch_array($result)){?>
                     <div class="list-group-item">
                         <div class="row">
@@ -146,13 +175,15 @@
 
 
                     <ul class="pagination">
-                      <li class="disabled"><a href="#">&laquo;</a></li>
-                      <li class="active"><a href="#">1</a></li>
-                      <li class="disabled"><a href="#">2</a></li>
-                      <li class="disabled"><a href="#">3</a></li>
-                      <li class="disabled"><a href="#">4</a></li>
-                      <li class="disabled"><a href="#">5</a></li>
-                      <li class="disabled"><a href="#">&raquo;</a></li>
+<?php  $btnb =$ctotle_page>5 ? $ctotle_page-$cpage>2 ? $cpage>3 ? $cpage-2 : 1 : $ctotle_page-4 : 1;
+            if($cpage>1) echo '<li><a href="'.url($cpage-1, $upage).'">&laquo;</a></li>';
+            else echo '<li class="disabled"><a>&laquo;</a></li>';
+            for($i = $btnb; $i<=$btnb+4 && $i<=$ctotle_page ; $i++){
+                echo '<li'. ($i==$cpage ? ' class="active"' : '') .'><a href="'.url($i, $upage).'">'.$i.'</a></li>';
+            }
+            if($cpage<$ctotle_page) echo '<li><a href="'.url($cpage+1, $cpage).'">&raquo;</a></li>';
+            else echo '<li class="disabled"><a>&raquo;</a></li>';
+?>
                     </ul>
                     
                 </div>
@@ -160,7 +191,7 @@
       </div>
       
       
-      <div class="panel panel-default">
+      <div class="panel panel-default" id="user-panel">
             <div class="panel-heading">
               <h3 class="panel-title">投票人<button class="btn btn-xs btn-primary" type="button" style="float:right;" onclick="add_user()">+</button></h3>
             </div>
@@ -170,8 +201,7 @@
 
                     <div class="list-group-item user-template" style="display:none;">
                         <div class="row">
-                            <div class="col-lg-1"></div>
-                            <div class="col-lg-9 form-inline">
+                            <div class="col-lg-8 form-inline">
                               <form>
                                 <input type="hidden" name="method" value="addusr" >
                                 <input type="hidden" name="uid" >
@@ -183,18 +213,18 @@
                                 <input type="password" class="form-control userinfo" name="pwd" placeholder="密码" onchange="modi_updatebtn(this)"></label>
                               </form>
                             </div>
-                            <div class="col-lg-2">
+                            <div class="col-lg-4">
                                 <button type="button" data-loading-text="保存中..." data-success-text="保存成功" data-error-text="保存失败" class="btn btn-primary save_btn" autocomplete="off" onclick="up_usr(this)">保存</button>
                                 <button class="btn btn-danger" type="button" onclick="remove_item(this)">取消</button>
                             </div>
                         </div>
                     </div>
 
-<?php   $result = query("select * from user where state = 1");
+<?php   $result = query("select * from user where state = 1 limit $ubegin, $uperpage");
              while($row = mysql_fetch_array($result)){?>
                     <div class="list-group-item">
                         <div class="row">
-                            <div class="col-lg-9 form-inline">
+                            <div class="col-lg-8 form-inline">
                               <form>
                                 <input type="hidden" name="method" value="modiusr" >
                                 <input type="hidden" name="uid" value="<?php echo $row['id'];?>" >
@@ -206,7 +236,7 @@
                                 <input type="password" name="pwd" class="form-control userinfo" placeholder="密码" onchange="modi_updatebtn(this)" ></label>
                               </form>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-4">
                                 <button type="button" data-loading-text="保存中..." data-success-text="保存成功" data-error-text="保存失败" class="btn btn-primary save_btn" autocomplete="off" onclick="up_usr(this)">保存</button>
                                 <button class="btn btn-danger" type="button" onclick="del_usr(this)">删除</button>
                                 <button type="button" data-loading-text="清除中..." data-success-text="清除成功" data-error-text="清除失败" class="btn btn-danger" autocomplete="off" onclick="clr_usr(this)">清除投票数据</button>
@@ -216,13 +246,15 @@
 <?php   }?>
             
                     <ul class="pagination">
-                      <li class="disabled"><a href="#">&laquo;</a></li>
-                      <li class="active"><a href="#">1</a></li>
-                      <li class="disabled"><a href="#">2</a></li>
-                      <li class="disabled"><a href="#">3</a></li>
-                      <li class="disabled"><a href="#">4</a></li>
-                      <li class="disabled"><a href="#">5</a></li>
-                      <li class="disabled"><a href="#">&raquo;</a></li>
+<?php  $btnb =$utotle_page>5 ? $utotle_page-$upage>2 ? $upage>3 ? $upage-2 : 1 : $utotle_page-4 : 1;
+            if($upage>1) echo '<li><a href="'.url($cpage, $upage-1).'#user-panel">&laquo;</a></li>';
+            else echo '<li class="disabled"><a>&laquo;</a></li>';
+            for($i = $btnb; $i<=$btnb+4 && $i<=$utotle_page ; $i++){
+                echo '<li'. ($i==$upage ? ' class="active"' : '') .'><a href="'.url($cpage, $i).'#user-panel">'.$i.'</a></li>';
+            }
+            if($upage<$utotle_page) echo '<li><a href="'.url($cpage,$upage+1).'#user-panel">&raquo;</a></li>';
+            else echo '<li class="disabled"><a>&raquo;</a></li>';
+?>
                     </ul>
                 </div>
             </div>
