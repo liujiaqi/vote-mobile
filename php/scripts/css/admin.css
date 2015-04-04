@@ -52,3 +52,7 @@ body {
 .pagination { margin-bottom:0; float:right; }
 
 .col-candbtn { margin-top:100px; }
+
+.clearfix .btn { margin-left: 5px; }
+#accordion .panel { margin-top:10px; margin-bottom:0px; }
+.clearfix .panel-title a { display: inline-block; font-size: 20px; margin-top: 3px; overflow: hidden; white-space: nowrap; width:800px;}

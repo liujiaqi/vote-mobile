@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="description" content="">
+    <meta name="author" content="-TiH-liujiaqi from SDU">
+
+    <title>投票管理系统</title>
+
+    <script type="text/javascript" src="scripts/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="scripts/js/bootstrap.min.js" charset="UTF-8"></script>
+    <link href="scripts/css/bootstrap.min.css" rel="stylesheet">
+    <link href="scripts/css/bootstrap-datetimepicker.css" rel="stylesheet" media="screen">
+    <link href="scripts/css/admin.css" rel="stylesheet" media="screen">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="scripts/js/html5shiv.min.js"></script>
+      <script src="scripts/js/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <div class="container">
+    <div class="page-header"><h1>投票管理系统<small>Powered by SDU Online</small></h1></div>
+      <div class="panel panel-default" id="accordion">
+            <div class="panel-heading">
+              <h3 class="panel-title">投票<button class="btn btn-xs btn-primary" type="button" style="float:right;">+</button></h3>
+            </div>
+            
+                  <div class="panel panel-default">
+                    <div class="panel-heading clearfix" role="tab" id="headingOne">
+                      <h4 class="panel-title pull-left">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                          山东大学省级优秀学生评选
+                        </a>
+                      </h4>
+                      <button class="btn btn-sm btn-danger pull-right" type="button">删除</button>
+                      <button class="btn btn-sm btn-danger pull-right" type="button">清除结果</button>
+                      <a class="btn btn-sm btn-info pull-right" href="export.php" target="_blank">导出结果</a>
+                      <a class="btn btn-sm btn-success pull-right" href="#">修改</a>
+                    </div>
+                    <div id="collapseOne" class="panel-collapse collapse" role="tabpanel">
+                      <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-10">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td class="bg-info"><b>开始时间</b></td>
+                                        <td>2015/3/31  0:17:00</td>
+                                        <td class="bg-info"><b>结束时间</b></td>
+                                        <td>2018-03-26 02:00:00</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="bg-info"><b>候选人总数</b></td>
+                                        <td>11</td>
+                                        <td class="bg-info"><b>投票人数</b></td>
+                                        <td>0/9</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="bg-info"><b>每人投票数</b></td>
+                                        <td>2</td>
+                                        <td class="bg-info"><b>投票总数</b></td>
+                                        <td>1</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-lg-2">
+                                <img class="img-thumbnail" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxkZWZzLz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjczLjUiIHk9IjEwMCIgc3R5bGU9ImZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMHB0O2RvbWluYW50LWJhc2VsaW5lOmNlbnRyYWwiPjIwMHgyMDA8L3RleHQ+PC9nPjwvc3ZnPg==" data-holder-rendered="true">
+                            </div>
+                            </div>
+                        </div>
+                      </div>
+                  </div>
+              
+                    
+            <div class="panel-body">
+                    <ul class="pagination">
+                      <li class="disabled"><a href="#">&laquo;</a></li>
+                      <li class="active"><a href="#">1</a></li>
+                      <li><a href="#">2</a></li>
+                      <li><a href="#">3</a></li>
+                      <li><a href="#">4</a></li>
+                      <li><a href="#">5</a></li>
+                      <li><a href="#">&raquo;</a></li>
+                    </ul>
+                    </div>
+                    
+                </div>
+            </div>
+      </div>
+      
+        <div style="text-align:center;">Copyright &copy; 2015 www.online.sdu.edu.cn All Rights Reserved.</div>
+    </div>
+  </body>
+</html>

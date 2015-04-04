@@ -42,12 +42,17 @@ body {
 
 .col-lg-2 { text-align: center; }
 .navbar {background-color: #ddd;}
-#vote-name { width:250px; }
-#total-per { width:80px; }
+#vote-name { width:200px; }
+#total-per { width:60px; }
 .cand-name { width: 100px; }
-.uid { width:70px; }
+
+.list-group-item .form-inline .userinfo { width:180px; }
 
 .list-group { margin-bottom:0; }
 .pagination { margin-bottom:0; float:right; }
 
 .col-candbtn { margin-top:100px; }
+
+.clearfix .btn { margin-left: 5px; }
+#accordion .panel { margin-top:10px; margin-bottom:0px; }
+.clearfix .panel-title a { display: inline-block; font-size: 20px; margin-top: 3px; overflow: hidden; white-space: nowrap; width:800px;}
