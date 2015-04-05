@@ -131,8 +131,9 @@
     <div class="container">
     <div class="page-header"><h1>投票管理系统<small>Powered by SDU Online</small></h1></div>
       <div class="panel panel-default">
-            <div class="panel-heading">
-              <h3 class="panel-title">候选人<button class="btn btn-xs btn-primary" type="button" style="float:right;" onclick="add_cand()">+</button></h3>
+            <div class="panel-heading clearfix">
+              <h3 class="panel-title pull-left">候选人</h3>
+              <button class="btn btn-xs btn-primary pull-right" type="button" onclick="add_cand()"><span class="glyphicon glyphicon-plus"></span></button>
             </div>
             <form action="uploadimg.php" id="hidfor" method="post" enctype="multipart/form-data" target="hidfr" style="display:none;">
                 <input id="file" name="file"  type="file" onchange="$('#hidfor').submit();" >
@@ -160,11 +161,11 @@
                             <div class="col-lg-5">
                                 <textarea class="form-control" name="description" rows="7" placeholder="描述" onchange="modi_updatebtn(this)"></textarea>
                             </div>
+                          </form>
                             <div class="col-lg-2 col-candbtn">
                                 <button type="button" data-loading-text="保存中..." data-success-text="保存成功" data-error-text="保存失败" class="btn btn-primary save_btn" autocomplete="off" onclick="up_cand(this)">保存</button>
                                 <button class="btn btn-danger" type="button" onclick="remove_item(this)">取消</button>
                             </div>
-                          </form>
                         </div>
                     </div>
                 
@@ -189,11 +190,11 @@
                             <div class="col-lg-5">
                                 <textarea class="form-control" name="description" rows="7" placeholder="描述" onchange="modi_updatebtn(this)"><?php echo $row['description'];?></textarea>
                             </div>
+                          </form>
                             <div class="col-lg-2 col-candbtn">
                                 <button type="button" data-loading-text="保存中..." data-success-text="保存成功" data-error-text="保存失败" class="btn btn-primary save_btn" autocomplete="off" onclick="up_cand(this)">保存</button>
                                 <button class="btn btn-danger" type="button" onclick="del_cand(this)">删除</button>
                             </div>
-                          </form>
                         </div>
                     </div>
 <?php       }
@@ -218,11 +219,28 @@
       
       
       <div class="panel panel-default" id="user-panel">
-            <div class="panel-heading">
-              <h3 class="panel-title">投票人<button class="btn btn-xs btn-primary" type="button" style="float:right;" onclick="add_user()">+</button></h3>
+            <div class="panel-heading clearfix">
+              <h3 class="panel-title pull-left">投票人</h3>
+              <button class="btn btn-xs btn-primary pull-right" type="button" onclick="add_user()"><span class="glyphicon glyphicon-plus"></span></button>
+              <button class="btn btn-xs btn-primary pull-right" type="button" data-toggle="collapse" data-target="#existusers" >添加已有用户</button>
             </div>
             <div class="panel-body">
             
+                <div class="panel panel-default">
+                  <div class="panel-heading" role="tab">
+                    <h4 class="panel-title">
+                      <a data-toggle="collapse" href="#existusers">其他投票中已存在的用户</a>
+                    </h4>
+                  </div>
+                  <div id="existusers" class="panel-collapse collapse" role="tabpanel">
+                    <div class="panel-body">
+<?php          $result = query("select * from `user` where state=1 and `user`.id not in (select uid from v_u where vid=$vid)");
+                while($row = mysql_fetch_array($result)){?>
+                    <span class="extusr"><a onclick="sel_usr(this, <?php echo "$vid, ".$row['id'];?>)"><?php echo $row['name'];?>(<?php echo $row['realname'];?>)</a></span>
+<?php           }?>
+                    </div>
+                  </div>
+                </div>
                 <div class="list-group user-list">
 
                     <div class="list-group-item user-template" style="display:none;">
@@ -313,7 +331,7 @@
     <div class="page-header"><h1>投票管理系统<small>Powered by SDU Online</small><a class="btn btn-sm  btn-info pull-right" href="admin.php?logout=1">退出系统</a></h1></div>
       <div class="panel panel-default" id="accordion">
             <div class="panel-heading">
-              <h3 class="panel-title" style="display:inline;">投票</h3><a class="btn btn-xs btn-primary pull-right" type="button" href="admin.php?id=0">+</a>
+              <h3 class="panel-title" style="display:inline;">投票</h3><a class="btn btn-xs btn-primary pull-right" type="button" href="admin.php?id=0"><span class="glyphicon glyphicon-plus"></span></a>
             </div>
             
 <?php      if($vbegin>=0){
@@ -324,7 +342,7 @@
                     $row2 = mysql_fetch_array($result2);
                     ?>
                   <div class="panel panel-default">
-                    <div class="panel-heading clearfix" role="tab" id="headingOne">
+                    <div class="panel-heading clearfix" role="tab">
                       <h4 class="panel-title pull-left">
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse_<?php echo $row['id'];?>">
                           <?php echo $row['title'];?>
@@ -384,6 +402,19 @@
                         </ul>
                     </div>
                     
+                </div>
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h4 class="panel-title">投票人</h4>
+                  </div>
+                  <div class="panel-collapse">
+                    <div class="panel-body">
+<?php          $result = query("select * from `user` where state = 1");
+                while($row = mysql_fetch_array($result)){?>
+                    <span class="extusr"><a><?php echo $row['name'];?>(<?php echo $row['realname'];?>)</a><a class="glyphicon glyphicon-minus-sign usr-rm-btn" onclick="del_usr(this, <?php echo $row['id'];?>)"></a></span>
+<?php           }?>
+                    </div>
+                  </div>
                 </div>
             </div>
 

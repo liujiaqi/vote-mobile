@@ -91,6 +91,13 @@
                 else echo "T:";
                 break;
                 
+            case "selusr":
+                $vid = postint('vid');
+                $uid = postint('uid');
+                if(query("insert into `v_u` (vid, uid) values($vid, $uid)")) echo "T:";
+                else die("选择用户失败！");
+                break;
+                
             case "delusr":
                 $uid = postint('uid');
                 if(!query("update `user` set state = 0 where id = $uid")) die("删除用户失败！");

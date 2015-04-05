@@ -55,3 +55,8 @@ body {
 .clearfix .btn { margin-left: 5px; }
 #accordion .panel { margin-top:10px; margin-bottom:0px; }
 .clearfix .panel-title a { display: inline-block; font-size: 20px; margin-top: 3px; overflow: hidden; white-space: nowrap; width:800px;}
+
+.extusr { margin-right:15px; }
+.extusr a { cursor:pointer; }
+.usr-rm-btn { color:#d9534f; }
+.usr-rm-btn:hover { color: #c9302c; text-decoration:none; }

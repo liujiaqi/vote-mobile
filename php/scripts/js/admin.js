@@ -39,7 +39,7 @@ function up_back(info, src){
 
 function up_cand(btn){
     var usr_item = $(btn).button("loading").popover('destroy').parent().parent();
-    var usrdata = usr_item.serialize();
+    var usrdata = usr_item.find("form").serialize();
     $.ajax({
             type: "POST",
             async: false,
@@ -70,7 +70,7 @@ function del_cand(btn){
     if(confirm("确定删除该候选人？")){
         var usr_item = $(btn).popover('destroy').parent().parent();
         usr_item.find("input[name='method']").val("delcand");
-        var usrdata = usr_item.serialize();
+        var usrdata = usr_item.find("form").serialize();
         $.ajax({
                 type: "POST",
                 async: false,
@@ -78,7 +78,7 @@ function del_cand(btn){
                 data: usrdata,
                 success: function (resp) {
                     if(resp.indexOf("T:")==0){
-                        usr_item.parent().parent().remove();
+                        usr_item.parent().remove();
                     }
                     else{
                         $(btn).popover({ 'placement': 'top', 'content': resp}).popover('show');
@@ -150,27 +150,55 @@ function rm_usr(btn){
     }
 }
 
-function del_usr(btn){
-    if(confirm("确定删除该用户？")){
-        var usr_item = $(btn).popover('destroy').parent().parent();
-        usr_item.find("input[name='method']").val("delusr");
-        var usrdata = usr_item.find("form").serialize();
+function sel_usr(btn, vid, uid){
+    $.ajax({
+            type: "POST",
+            async: false,
+            url: "admin_ajax.php",
+            data: "method=selusr&vid="+vid+"&uid="+uid,
+            success: function (resp) {
+                if(resp.indexOf("T:")==0){
+                    usr_item = $(".user-template").clone().removeClass("user-template").css("display","block");
+                    usr = $(btn).html().replace(')','').split('(');
+                    usr_item.find("input[name='uid']").val(""+uid);
+                    usr_item.find("input[name='uname']").val(usr[0]);
+                    usr_item.find("input[name='realname']").val(usr[1]);
+                    usr_item.find("input[name='uname']").attr("readonly","readonly");
+                    usr_item.find("input[name='method']").val("modiusr");
+                    usr_item.find("button").eq(1).attr("onclick","del_usr(this)").html("删除");
+                    $(".user-list").prepend(usr_item);
+                    $(btn).parent().remove();
+                }
+                else{
+                    alert("对不起，删除失败");
+                    console.log(resp); 
+                }
+            },
+            error:function (resp){
+                alert("对不起，删除失败");
+                console.log(resp); 
+            }
+    });
+}
+
+function del_usr(btn, uid){
+    if(confirm("！！！该操作将从系统中删除此用户，请确认此用户不被需要参与任何一个投票！！！\r\n\r\n确定删除该用户？")){
         $.ajax({
                 type: "POST",
                 async: false,
                 url: "admin_ajax.php",
-                data: usrdata,
+                data: "method=delusr&uid="+uid,
                 success: function (resp) {
                     if(resp.indexOf("T:")==0){
-                        usr_item.parent().remove();
+                        $(btn).parent().remove();
                     }
                     else{
-                        $(btn).popover({ 'placement': 'top', 'content': resp}).popover('show');
+                        alert("对不起，删除失败");
                         console.log(resp); 
                     }
                 },
                 error:function (resp){
-                    $(btn).popover({ 'placement': 'top', 'content': resp}).popover('show');
+                    alert("对不起，删除失败");
                     console.log(resp); 
                 }
         });
