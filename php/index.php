@@ -3,22 +3,24 @@
 	//error_reporting(E_ALL);
 	ini_set('display_errors', '1');
 	require_once("db.php");
+    $vid = intval($_GET['id']);
     //$user_ip = ($_SERVER["HTTP_VIA"]) ? $_SERVER["HTTP_X_FORWARDED_FOR"] : $_SERVER["REMOTE_ADDR"]; 
-    $user_ip = $_SERVER["REMOTE_ADDR"];
-    $result = query("select * from parameter");
-    $parameter = mysql_fetch_array($result);
+    $user_ip = user_realip();
+    $result = query("select * from parameter where id = $vid and state = 1");
+    if(!($parameter = mysql_fetch_array($result))) die("404 Not Found");
+    
     $now = date("Y-m-d H:i:s");
     
     if (isset($_POST['login'])){
         if($now > $parameter['begintime']){
             if($now < $parameter['endtime']){
-                $tname = isset($_POST["name"])?$_POST["name"]:"";
+                $tname = poststr("name");
                 $tpwd = isset($_POST["pwd"])?$_POST["pwd"]:"";
-                $sql = "select password,id from user where name = '".$_POST['name']."' and state = 1";
+                $sql = "select password,id from view_user where vid = $vid and name = '".$tname."'";
                 $result = query($sql);
                 if ($row = mysql_fetch_array($result)) {
                     if($row['password'] == md5($tpwd)){
-                        $sql = "update user set lastlogin = now(), ip = '".$user_ip."' where name = '" . $tname . "'";
+                        $sql = "update user set lastlogin = now(), ip = '".$user_ip."' where id = '" . $row['id'] . "'";
                         query($sql);
                         $_SESSION['uid'] = $row['id'];
                     }
@@ -30,6 +32,13 @@
         }else{
             $errinfo = "对不起，投票还未开始";
         }
+    }
+    
+    if(isset($_SESSION['uid'])){
+        $result = query("select count(*) from view_user where vid = $vid and id =".$_SESSION['uid']);
+        $row = mysql_fetch_array($result);
+        if(!($row['count(*)']) || $now < $parameter['begintime'] || $now > $parameter['endtime'])
+            unset($_SESSION['uid']);
     }
     
     // 字符截断
@@ -80,20 +89,20 @@
 <?php if(isset($_POST['vote'])){
         if(isset($_SESSION['uid'])){
             $uid = intval($_SESSION['uid']);
-            $result = query("select count(*) from vote where uid = $uid");
+            $result = query("select count(*) from view_vote where vid=$vid and uid = $uid");
             if ($row = mysql_fetch_array($result)) {
                 if($row['count(*)'] == 0){
                     if(count($_POST['cid']) == $parameter['total']){
                         $vals = array();
-                        $cids = array();
+                        //$cids = array();
                         foreach($_POST['cid'] as $cid){
-                            $vals[] = "(".$uid.",".intval($cid).", now(), '".$user_ip."', 1)";
-                            $cids[]= intval($cid);
+                            $vals[] = "($uid, ".intval($cid).", now(), '".$user_ip."', $vid, 1)";
+                            //$cids[]= intval($cid);
                         }
                         //$sql1 = "update candidate set poll = poll+1 where id in (".implode(",", $cids).")";
                         $sql2 = "insert into vote values ".implode(",", $vals);
                         if(/*query($sql1)&&*/query($sql2)){
-                            session_destroy();?>
+                            unset($_SESSION['uid']);?>
             <div id="cons_logo"><img width="165" height="165" src="images/cons_co.png"></div>
             <div id="cons_words">您的投票已提交成功</div>
 <?php                   }else{/*echo mysql_error();*/?>
@@ -104,7 +113,7 @@
             <div id="cons_logo"><img width="165" height="165" src="images/cons_inco.png"></div>
             <div id="cons_words">对不起，您的投票数目不正确</div>
 <?php               }
-                }else{session_destroy();?>
+                }else{unset($_SESSION['uid']);?>
             <div id="cons_logo"><img width="165" height="165" src="images/cons_inco.png"></div>
             <div id="cons_words">您已经投过票啦</div>
 <?php           }
@@ -114,13 +123,13 @@
     <div id="cons_words">请您登录后再投票</div>
 <?php   }?>
     <div style=" margin: 0 auto; width: 240px;">
-        <a id="cons_back" onclick="history.go(-1)">返回</a>
+        <a id="cons_back" href="index.php?id=<?php echo $vid;?>">返回</a>
     </div>
 <?php }else if(isset($_SESSION['uid'])){?>
     <script type="text/javascript">var total = <?php echo $parameter['total'];?>;</script>
     <section id="list_main">
         <ul>
-<?php   $result = query("select * from candidate");
+<?php   $result = query("select * from candidate where vid=$vid and state = 1");
         $first_cand = true;
         while($row = mysql_fetch_array($result)){?>
             <li<?php if($first_cand){ echo ' style="border: 0"';$first_cand=false;}?>>

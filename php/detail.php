@@ -1,13 +1,13 @@
 <?php
 	require_once("db.php");
-    $result = query("select * from parameter");
-    $parameter = mysql_fetch_array($result);
-    
 	$id = intval($_GET['id']);
 	
 	$sql = "SELECT * FROM candidate WHERE id=$id";
 	$con = mysql_query($sql);
-	$res = mysql_fetch_array($con);
+	if(!($res = mysql_fetch_array($con))) die("404 Not Found");
+    
+    $result = query("select * from parameter where id=".$res['vid']);
+    $parameter = mysql_fetch_array($result);
 ?>
 <!DOCTYPE html>
 <html>

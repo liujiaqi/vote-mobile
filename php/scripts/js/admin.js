@@ -27,18 +27,18 @@ function up_photo(btn){
 //<script>parent.up_back('OK','201501010000.png');</script>
 function up_back(info, src){
     if(info == "OK"){
-        upimgbtn.button("success").removeClass("btn-default").removeClass("btn-error").removeClass("btn-info").addClass("btn-success");
+        upimgbtn.button("success").popover('destroy').removeClass("btn-default").removeClass("btn-error").removeClass("btn-info").addClass("btn-success");
         upimgbtn.parent().find("img").attr("src", "photo/"+src);
         upimgbtn.parent().find("input[name='photo']").val(src);
     }else{
-        upimgbtn.button("error").removeClass("btn-default").removeClass("btn-success").removeClass("btn-info").addClass("btn-error");
-        alert(info);
+        upimgbtn.button("error").removeClass("btn-default").removeClass("btn-success").removeClass("btn-info").addClass("btn-danger");
+        $(upimgbtn).popover({ 'placement': 'bottom', 'content': info}).popover('show');
         console.log(info);
     }
 }
 
 function up_cand(btn){
-    var usr_item = $(btn).button("loading").parent().parent();
+    var usr_item = $(btn).button("loading").popover('destroy').parent().parent();
     var usrdata = usr_item.serialize();
     $.ajax({
             type: "POST",
@@ -54,11 +54,13 @@ function up_cand(btn){
                 }
                 else{
                     $(btn).button("error").removeClass("btn-primary").addClass("btn-danger");
+                    $(btn).popover({ 'placement': 'top', 'content': resp}).popover('show');
                     console.log(resp); 
                 }
             },
-            error:function (resp){ 
+            error:function (resp){
                 $(btn).button("error").removeClass("btn-primary").addClass("btn-danger");
+                $(btn).popover({ 'placement': 'top', 'content': resp}).popover('show');
                 console.log(resp); 
             }
     });
@@ -66,7 +68,7 @@ function up_cand(btn){
 
 function del_cand(btn){
     if(confirm("确定删除该候选人？")){
-        var usr_item = $(btn).parent().parent();
+        var usr_item = $(btn).popover('destroy').parent().parent();
         usr_item.find("input[name='method']").val("delcand");
         var usrdata = usr_item.serialize();
         $.ajax({
@@ -79,10 +81,12 @@ function del_cand(btn){
                         usr_item.parent().parent().remove();
                     }
                     else{
+                        $(btn).popover({ 'placement': 'top', 'content': resp}).popover('show');
                         console.log(resp); 
                     }
                 },
-                error:function (resp){ 
+                error:function (resp){
+                    $(btn).popover({ 'placement': 'top', 'content': resp}).popover('show');
                     console.log(resp); 
                 }
         });
@@ -90,7 +94,7 @@ function del_cand(btn){
 }
 
 function up_usr(btn){
-    var usr_item = $(btn).button("loading").parent().parent();
+    var usr_item = $(btn).button("loading").popover('destroy').parent().parent();
     var usrdata = usr_item.find("form").serialize();
     $.ajax({
             type: "POST",
@@ -107,19 +111,48 @@ function up_usr(btn){
                 }
                 else{
                     $(btn).button("error").removeClass("btn-primary").addClass("btn-danger");
+                    $(btn).popover({ 'placement': 'top', 'content': resp}).popover('show');
                     console.log(resp); 
                 }
             },
-            error:function (resp){ 
+            error:function (resp){
                 $(btn).button("error").removeClass("btn-primary").addClass("btn-danger");
+                $(btn).popover({ 'placement': 'top', 'content': resp}).popover('show');
                 console.log(resp); 
             }
     });
 }
 
+function rm_usr(btn){
+    if(confirm("确定移除该用户？")){
+        var usr_item = $(btn).popover('destroy').parent().parent();
+        usr_item.find("input[name='method']").val("rmusr");
+        var usrdata = usr_item.find("form").serialize();
+        $.ajax({
+                type: "POST",
+                async: false,
+                url: "admin_ajax.php",
+                data: usrdata,
+                success: function (resp) {
+                    if(resp.indexOf("T:")==0){
+                        usr_item.parent().remove();
+                    }
+                    else{
+                        $(btn).popover({ 'placement': 'top', 'content': resp}).popover('show');
+                        console.log(resp); 
+                    }
+                },
+                error:function (resp){
+                    $(btn).popover({ 'placement': 'top', 'content': resp}).popover('show');
+                    console.log(resp); 
+                }
+        });
+    }
+}
+
 function del_usr(btn){
     if(confirm("确定删除该用户？")){
-        var usr_item = $(btn).parent().parent();
+        var usr_item = $(btn).popover('destroy').parent().parent();
         usr_item.find("input[name='method']").val("delusr");
         var usrdata = usr_item.find("form").serialize();
         $.ajax({
@@ -132,16 +165,17 @@ function del_usr(btn){
                         usr_item.parent().remove();
                     }
                     else{
+                        $(btn).popover({ 'placement': 'top', 'content': resp}).popover('show');
                         console.log(resp); 
                     }
                 },
-                error:function (resp){ 
+                error:function (resp){
+                    $(btn).popover({ 'placement': 'top', 'content': resp}).popover('show');
                     console.log(resp); 
                 }
         });
     }
 }
-
 
 function clr_usr(btn){
     if(confirm("确定清除该用户的投票信息？")){
@@ -171,13 +205,13 @@ function clr_usr(btn){
 }
 
 
-function flush(){
+function flush(vid){
     if(confirm("确定清除所有投票信息？")){
         $.ajax({
                 type: "POST",
                 async: false,
                 url: "admin_ajax.php",
-                data: "method=flush",
+                data: "method=flush&vid="+vid,
                 success: function (resp) {
                     if(resp.indexOf("T:")==0){
                         alert("清除成功！");
@@ -189,6 +223,31 @@ function flush(){
                 },
                 error:function (resp){ 
                     alert("清除失败！");
+                    console.log(resp); 
+                }
+        });
+    }
+}
+
+function del_vote(btn, vid){
+    if(confirm("确定删除该投票？")){
+        var usr_item = $(btn).parent().parent();
+        $.ajax({
+                type: "POST",
+                async: false,
+                url: "admin_ajax.php",
+                data: "method=delvote&vid="+vid,
+                success: function (resp) {
+                    if(resp.indexOf("T:")==0){
+                        $(btn).parent().parent().remove();
+                    }
+                    else{
+                        alert(resp);
+                        console.log(resp); 
+                    }
+                },
+                error:function (resp){
+                    alert(resp);
                     console.log(resp); 
                 }
         });

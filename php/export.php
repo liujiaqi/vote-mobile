@@ -1,11 +1,12 @@
 <?php
     session_start();
     if(!isset($_SESSION['admin'])) die("请您先登录！");
-    
+    if(!($vid = intval($_GET['id']))) die("缺少必要参数！");
+
     require_once('Classes/PHPExcel.php');
 	require_once('db.php');
     
-    $result = query("select * from parameter");
+    $result = query("select * from parameter where id = $vid");
     $parameter = mysql_fetch_array($result);
     
         
@@ -30,7 +31,7 @@
                           ->setCellValue('B2', '得票数');
                           
     
-    $result = query("select name, poll from candidate where state = 1 order by poll desc");
+    $result = query("select name, poll from candidate where vid=$vid and state = 1 order by poll desc");
     $i = 3;
     while($row = mysql_fetch_array($result)){
         $objPHPSheet ->setCellValue("A$i", $row["name"])
@@ -58,7 +59,8 @@
     $objPHPExcel ->createSheet();
     $objPHPSheet = $objPHPExcel->getSheet(1);
     
-    $result = query("select count(*) as nvote, (select count(*) from candidate where state =1) as ncandi, (select count(distinct uid) from vote where state =1) as nvoteu, (select count(*) from `user` where state =1)  as nuser  from vote  where state =1");
+    //$result = query("select count(*) as nvote, (select count(*) from candidate where state =1) as ncandi, (select count(distinct uid) from vote where state =1) as nvoteu, (select count(*) from `user` where state =1)  as nuser  from vote  where state =1");
+    $result = query("select (select count(*) from view_vote  where vid =$vid) as nvote, (select count(*) from candidate where vid = $vid and state =1) as ncandi, (select count(distinct uid) from view_vote where vid =$vid) as nvoteu, (select count(*) from `view_user` where vid =$vid)  as nuser from dual");
     $row = mysql_fetch_array($result);
     
     $objPHPSheet ->setTitle('投票数据')
@@ -98,7 +100,8 @@
     $objPHPSheet ->getStyle('E5')->getFont()->setBold(true);
     $objPHPSheet ->getStyle('F5')->getFont()->setBold(true);
 
-    $result = query("select uid,realname, cid,candidate.name,`time`,vote.ip from vote left join `user` on vote.uid = `user`.id  left join candidate on vote.cid = candidate.id where vote.state =1");
+    //$result = query("select uid,realname, cid,candidate.name,`time`,vote.ip from vote left join `user` on vote.uid = `user`.id  left join candidate on vote.cid = candidate.id where vote.state =1");
+    $result = query("select * from view_vote where vid = $vid");
     $i = 6;
     while($row = mysql_fetch_array($result)){
         $objPHPSheet ->setCellValue("A$i", $row["uid"])

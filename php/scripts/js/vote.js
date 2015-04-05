@@ -29,7 +29,6 @@ function number(){
     }
     if(num > total){
         $(btn).click();
-        num = num - 1;
         $("#list_footer_btn1").find("span").html(num);
         setTimeout("bar()",200);
         setTimeout("foo()",400);

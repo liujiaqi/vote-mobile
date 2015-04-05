@@ -23,4 +23,15 @@
     function postint($key){
         return intval(isset($_POST[$key]) ? $_POST[$key] : 0);
     }
+    
+    function user_realip() {
+        if ($ip = getenv('HTTP_CLIENT_IP'))
+            return $ip;
+        if ($ip = getenv('HTTP_X_FORWARDED_FOR'))
+            return $ip;
+        if ($ip = getenv('REMOTE_ADDR'))
+            return $ip;
+        return $HTTP_SERVER_VARS['REMOTE_ADDR'];
+    }
+    
 ?>

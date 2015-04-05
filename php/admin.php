@@ -1,4 +1,5 @@
 <?php
+    $vperpage = 15;
     $cperpage = 5;
     $uperpage = 10;
     
@@ -10,50 +11,71 @@
             $_SESSION['admin'] = "admin";
         }
     }
+    if(isset($_GET['logout'])){
+        unset($_SESSION['admin']);
+        header("Location: admin.php");
+        exit;
+    }
     
     if(isset($_SESSION['admin'])){
-
         require_once("db.php");
-
-        $cpage = intval($_GET['cpage']);
-        if (($cpage==NULL) || ($cpage < 1)) $cpage = 1;
-        $res = mysql_query("select count(*) from candidate where state = 1");
-        $row = mysql_fetch_array($res);
-        $total = $row['count(*)'];
-        $ctotle_page = ceil($total/$cperpage);
-        if ($cpage > $ctotle_page) $cpage = $ctotle_page;
-        $cbegin = $cperpage * ($cpage - 1);
-        
-        $upage = intval($_GET['upage']);
-        if (($upage==NULL) || ($upage < 1)) $upage = 1;
-        $res = mysql_query("select count(*) from user where state = 1");
-        $row = mysql_fetch_array($res);
-        $total = $row['count(*)'];
-        $utotle_page = ceil($total/$uperpage);
-        if ($upage > $utotle_page) $upage = $utotle_page;
-        $ubegin = $uperpage * ($upage - 1);
-        
-        if(isset($_POST['param'])){
-            $title = mysql_real_escape_string(HTMLSpecialChars(isset($_POST['title']) ? $_POST['title'] : ""));
-            $total = intval(isset($_POST['total']) ? $_POST['total'] : 0);
-            $begintime = mysql_real_escape_string(isset($_POST['begintime']) ? $_POST['begintime'] : "");
-            $endtime = mysql_real_escape_string(isset($_POST['endtime']) ? $_POST['endtime']:"");
+        if(isset($_GET['id'])){
+            $vid = intval($_GET['id']);
+            if($vid == 0){
+                if(!query("insert into parameter values()")) die("对不起，服务器出现问题！");
+                header("Location: admin.php?id=".mysql_insert_id());
+                exit;
+            }
+            $cpage = intval($_GET['cpage']);
+            if (($cpage==NULL) || ($cpage < 1)) $cpage = 1;
+            $res = mysql_query("select count(*) from candidate where vid = $vid and state = 1");
+            $row = mysql_fetch_array($res);
+            $total = $row['count(*)'];
+            $ctotle_page = ceil($total/$cperpage);
+            if ($cpage > $ctotle_page) $cpage = $ctotle_page;
+            $cbegin = $cperpage * ($cpage - 1);
             
-            $sql = "update parameter set title='".$title."', total=$total, begintime='".$begintime."', endtime='".$endtime."' where id = 1";
-            //die($sql);
-            if(!query($sql)) die("更新参数失败！");
+            $upage = intval($_GET['upage']);
+            if (($upage==NULL) || ($upage < 1)) $upage = 1;
+            $res = mysql_query("select count(*) from view_user where vid = $vid");
+            $row = mysql_fetch_array($res);
+            $total = $row['count(*)'];
+            $utotle_page = ceil($total/$uperpage);
+            if ($upage > $utotle_page) $upage = $utotle_page;
+            $ubegin = $uperpage * ($upage - 1);
+            
+            if(isset($_POST['param'])){
+                //die("$vid");
+                $title = poststr('title');
+                $total = postint('total');
+                $begintime = poststr('begintime');
+                $endtime = poststr('endtime');
+                $sql = "update parameter set title='".$title."', total=$total, begintime='".$begintime."', endtime='".$endtime."' where id = $vid";
+                //die($sql);
+                if(!query($sql)) die("更新参数失败！");
+            }
+            $result = query("select * from parameter where id = $vid");
+            $parameter = mysql_fetch_array($result);
         }
-        $result = query("select * from parameter");
-        $parameter = mysql_fetch_array($result);
+        else{
+            $vpage = intval($_GET['page']);
+            if (($vpage==NULL) || ($vpage < 1)) $vpage = 1;
+            $res = mysql_query("select count(*) from parameter where state = 1");
+            $row = mysql_fetch_array($res);
+            $total = $row['count(*)'];
+            $vtotle_page = ceil($total/$vperpage);
+            if ($vpage > $vtotle_page) $vpage = $vtotle_page;
+            $vbegin = $vperpage * ($vpage - 1);
+        }
     }
     
     function url($cpage,$upage){
-        global $ctotle_page, $utotle_page;
+        global $vid, $ctotle_page, $utotle_page;
         if($cpage < 1) $cpage = 1;
         if ($cpage > $ctotle_page) $cpage = $ctotle_page;
         if($upage < 1) $upage = 1;
         if ($upage > $utotle_page) $upage = $utotle_page;
-        return $_SERVER['PHP_SELF']."?cpage=$cpage&upage=$upage";
+        return $_SERVER['PHP_SELF']."?id=$vid&cpage=$cpage&upage=$upage";
     }
     
 ?>
@@ -84,8 +106,9 @@
   </head>
 
   <body>
-<?php  if(isset($_SESSION['admin'])){?>
-  
+<?php  if(isset($_SESSION['admin'])){
+                if(isset($_GET['id'])){
+?>
     <nav class="navbar navbar-fixed-bottom">
         <div class="container">
             <form class="navbar-form" method="post">
@@ -97,10 +120,10 @@
                 <input type="text" id="begin-time" name="begintime" class="form-control form_datetime" <?php if(isset($parameter['begintime'])) echo 'value="'.$parameter['begintime'].'"'; ?> >
                 <label for="end-time">结束时间</label>
                 <input type="text" id="end-time" name="endtime" class="form-control form_datetime" <?php if(isset($parameter['endtime'])) echo 'value="'.$parameter['endtime'].'"'; ?> >
-                <a class="btn btn-sm btn-info" href="export.php" target="_blank">调查结果</a>
+                <a class="btn btn-sm btn-info" href="export.php?id=<?php echo $parameter['id'];?>" target="_blank">导出结果</a>
                 <button class="btn btn-sm btn-success" name="param" type="submit">保存</button>
-                <button class="btn btn-sm btn-warning" type="button" onclick="logout()">取消</button>
-                <button class="btn btn-sm btn-danger" type="button" onclick="flush()">清空</button>
+                <a class="btn btn-sm btn-warning" href="admin.php">取消</a>
+                <button class="btn btn-sm btn-danger" type="button" onclick="flush(<?php echo $parameter['id'];?>)">清空</button>
             </form>
         </div>
     </nav>
@@ -124,6 +147,7 @@
                           <form>
                             <div class="col-lg-2">
                                 <input type="hidden" name="method" value="addcand">
+                                <input type="hidden" name="vid" value="<?php echo $vid;?>" >
                                 <input type="hidden" name="cid">
                                 <img class="img-thumbnail" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxkZWZzLz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjczLjUiIHk9IjEwMCIgc3R5bGU9ImZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMHB0O2RvbWluYW50LWJhc2VsaW5lOmNlbnRyYWwiPjIwMHgyMDA8L3RleHQ+PC9nPjwvc3ZnPg==" data-holder-rendered="true">
                                 <input type="hidden" name="photo" value="" onchange="modi_updatebtn(this)">
@@ -145,8 +169,9 @@
                     </div>
                 
 
-<?php   $result = query("select * from candidate where state = 1 limit $cbegin, $cperpage");
-             while($row = mysql_fetch_array($result)){?>
+<?php  if($cbegin>=0){
+                $result = query("select * from candidate where vid=$vid and state = 1 limit $cbegin, $cperpage");
+                while($row = mysql_fetch_array($result)){?>
                     <div class="list-group-item">
                         <div class="row">
                           <form>
@@ -171,7 +196,8 @@
                           </form>
                         </div>
                     </div>
-<?php   }?>
+<?php       }
+            }?>
 
 
                     <ul class="pagination">
@@ -179,7 +205,7 @@
             if($cpage>1) echo '<li><a href="'.url($cpage-1, $upage).'">&laquo;</a></li>';
             else echo '<li class="disabled"><a>&laquo;</a></li>';
             for($i = $btnb; $i<=$btnb+4 && $i<=$ctotle_page ; $i++){
-                echo '<li'. ($i==$cpage ? ' class="active"' : '') .'><a href="'.url($i, $upage).'">'.$i.'</a></li>';
+                echo $i==$cpage ? '<li class="active"><a>'.$i.'</a></li>' : '<li><a href="'.url($i, $upage).'">'.$i.'</a></li>';
             }
             if($cpage<$ctotle_page) echo '<li><a href="'.url($cpage+1, $cpage).'">&raquo;</a></li>';
             else echo '<li class="disabled"><a>&raquo;</a></li>';
@@ -204,6 +230,7 @@
                             <div class="col-lg-8 form-inline">
                               <form>
                                 <input type="hidden" name="method" value="addusr" >
+                                <input type="hidden" name="vid" value="<?php echo $vid;?>" >
                                 <input type="hidden" name="uid" >
                                 <label>用户名
                                 <input type="text" class="form-control userinfo" name="uname" placeholder="用户名" onchange="modi_updatebtn(this)"></label>
@@ -220,13 +247,15 @@
                         </div>
                     </div>
 
-<?php   $result = query("select * from user where state = 1 limit $ubegin, $uperpage");
-             while($row = mysql_fetch_array($result)){?>
+<?php   if($ubegin>=0){
+                 $result = query("select * from view_user where vid=$vid limit $ubegin, $uperpage");
+                 while($row = mysql_fetch_array($result)){?>
                     <div class="list-group-item">
                         <div class="row">
                             <div class="col-lg-8 form-inline">
                               <form>
                                 <input type="hidden" name="method" value="modiusr" >
+                                <input type="hidden" name="vid" value="<?php echo $vid;?>" >
                                 <input type="hidden" name="uid" value="<?php echo $row['id'];?>" >
                                 <label>用户名
                                 <input type="text" name="uname" class="form-control userinfo" placeholder="用户名" value="<?php echo $row['name'];?>" onchange="modi_updatebtn(this)" readonly></label>
@@ -238,19 +267,20 @@
                             </div>
                             <div class="col-lg-4">
                                 <button type="button" data-loading-text="保存中..." data-success-text="保存成功" data-error-text="保存失败" class="btn btn-primary save_btn" autocomplete="off" onclick="up_usr(this)">保存</button>
-                                <button class="btn btn-danger" type="button" onclick="del_usr(this)">删除</button>
+                                <button class="btn btn-danger" type="button" onclick="rm_usr(this)">移除</button>
                                 <button type="button" data-loading-text="清除中..." data-success-text="清除成功" data-error-text="清除失败" class="btn btn-danger" autocomplete="off" onclick="clr_usr(this)">清除投票数据</button>
                             </div>
                         </div>
                     </div>
-<?php   }?>
+<?php       }
+            }?>
             
                     <ul class="pagination">
 <?php  $btnb =$utotle_page>5 ? $utotle_page-$upage>2 ? $upage>3 ? $upage-2 : 1 : $utotle_page-4 : 1;
             if($upage>1) echo '<li><a href="'.url($cpage, $upage-1).'#user-panel">&laquo;</a></li>';
             else echo '<li class="disabled"><a>&laquo;</a></li>';
             for($i = $btnb; $i<=$btnb+4 && $i<=$utotle_page ; $i++){
-                echo '<li'. ($i==$upage ? ' class="active"' : '') .'><a href="'.url($cpage, $i).'#user-panel">'.$i.'</a></li>';
+                echo $i==$upage ? '<li class="active"><a>'.$i.'</a></li>' : '<li class="active"><a href="'.url($cpage, $i).'#user-panel">'.$i.'</a></li>';
             }
             if($upage<$utotle_page) echo '<li><a href="'.url($cpage,$upage+1).'#user-panel">&raquo;</a></li>';
             else echo '<li class="disabled"><a>&raquo;</a></li>';
@@ -278,7 +308,87 @@
             showMeridian: 1
         });
     </script>
-<?php }else{?>
+<?php       }else{?>
+    <div class="container">
+    <div class="page-header"><h1>投票管理系统<small>Powered by SDU Online</small><a class="btn btn-sm  btn-info pull-right" href="admin.php?logout=1">退出系统</a></h1></div>
+      <div class="panel panel-default" id="accordion">
+            <div class="panel-heading">
+              <h3 class="panel-title" style="display:inline;">投票</h3><a class="btn btn-xs btn-primary pull-right" type="button" href="admin.php?id=0">+</a>
+            </div>
+            
+<?php      if($vbegin>=0){
+                    $res = query("select * from parameter where state = 1 limit $vbegin, $vperpage");
+                    while($row = mysql_fetch_array($res)){
+                    $vid = $row['id'];
+                    $result2 = query("select (select count(*) from view_vote  where vid =$vid) as nvote, (select count(*) from candidate where vid = $vid and state =1) as ncandi, (select count(distinct uid) from view_vote where vid =$vid) as nvoteu, (select count(*) from `view_user` where vid =$vid)  as nuser from dual");
+                    $row2 = mysql_fetch_array($result2);
+                    ?>
+                  <div class="panel panel-default">
+                    <div class="panel-heading clearfix" role="tab" id="headingOne">
+                      <h4 class="panel-title pull-left">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse_<?php echo $row['id'];?>">
+                          <?php echo $row['title'];?>
+                        </a>
+                      </h4>
+                      <button class="btn btn-sm btn-danger pull-right" type="button" onclick="del_vote(this, <?php echo $row['id'];?>)">删除</button>
+                      <button class="btn btn-sm btn-danger pull-right" type="button" onclick="flush(<?php echo $row['id'];?>)">清除结果</button>
+                      <a class="btn btn-sm btn-info pull-right" href="export.php?id=<?php echo $row['id'];?>" target="_blank">导出结果</a>
+                      <a class="btn btn-sm btn-success pull-right" href="admin.php?id=<?php echo $row['id'];?>">修改</a>
+                    </div>
+                    <div id="collapse_<?php echo $row['id'];?>" class="panel-collapse collapse" role="tabpanel">
+                      <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-10">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td class="bg-info"><b>开始时间</b></td>
+                                        <td><?php echo $row['begintime'];?></td>
+                                        <td class="bg-info"><b>结束时间</b></td>
+                                        <td><?php echo $row['endtime'];?></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="bg-info"><b>候选人总数</b></td>
+                                        <td><?php echo $row2['ncandi'];?></td>
+                                        <td class="bg-info"><b>投票人数</b></td>
+                                        <td><?php echo $row2['nvoteu'];?>/<?php echo $row2['nuser'];?></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="bg-info"><b>每人投票数</b></td>
+                                        <td><?php echo $row['total'];?></td>
+                                        <td class="bg-info"><b>投票总数</b></td>
+                                        <td><?php echo $row2['nvote'];?></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-lg-2">
+                                <img class="img-thumbnail" src="qr.php?id=<?php echo $row['id'];?>">
+                            </div>
+                            </div>
+                        </div>
+                      </div>
+                  </div>
+<?php               }
+                }?>
+
+                    <div class="panel-body">
+                        <ul class="pagination">
+<?php  $btnb =$vtotle_page>5 ? $vtotle_page-$vpage>2 ? $vpage>3 ? $vpage-2 : 1 : $vtotle_page-4 : 1;
+            if($vpage>1) echo '<li><a href="admin.php?page='.($vpage-1).'">&laquo;</a></li>';
+            else echo '<li class="disabled"><a>&laquo;</a></li>';
+            for($i = $btnb; $i<=$btnb+4 && $i<=$vtotle_page ; $i++){
+                echo $i==$vpage ?  '<li class="active"><a>'.$i.'</a></li>' : '<li><a href="admin.php?page='.$i.'">'.$i.'</a></li>';
+            }
+            if($vpage<$vtotle_page) echo '<li><a href="admin.php?page='.($vpage+1).'">&raquo;</a></li>';
+            else echo '<li class="disabled"><a>&raquo;</a></li>';
+?>
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+
+<?php   }
+            }else{?>
     <form class="form-signin" method="post">
         <h2 class="form-signin-heading">投票管理后台</h2>
         <?php if(isset($_POST['login'])) echo '<div class="alert alert-danger" role="alert">用户名或密码错误</div>';?>
