@@ -43,7 +43,7 @@ body {
 .col-lg-2 { text-align: center; }
 .navbar {background-color: #ddd;}
 #total-per { width:60px; }
-.cand-name { width: 100px; }
+.cand-name { width: 100px; float:left; }
 
 .list-group-item .form-inline .userinfo { width:180px; }
 

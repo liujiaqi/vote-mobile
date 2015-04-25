@@ -53,6 +53,7 @@
                 $sql = "update parameter set title='".$title."', total=$total, begintime='".$begintime."', endtime='".$endtime."' where id = $vid";
                 //die($sql);
                 if(!query($sql)) die("更新参数失败！");
+                header("Location: admin.php");
             }
             $result = query("select * from parameter where id = $vid");
             $parameter = mysql_fetch_array($result);
@@ -154,12 +155,10 @@
                                 <input type="hidden" name="photo" value="" onchange="modi_updatebtn(this)">
                                 <button class="btn btn-sm btn-default" autocomplete="off" data-loading-text="上传中..." data-success-text="上传成功" data-error-text="上传失败" type="button" onclick="up_photo(this);">上传</button>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-8">
                                 <input type="text" class="form-control cand-name" name="name" placeholder="姓名" onchange="modi_updatebtn(this)" required>
+                                <input type="number" class="form-control cand-name" name="rank" placeholder="序号" onchange="modi_updatebtn(this)">
                                 <textarea class="form-control" name="summary" rows="5" placeholder="简介" onchange="modi_updatebtn(this)"></textarea>
-                            </div>
-                            <div class="col-lg-5">
-                                <textarea class="form-control" name="description" rows="7" placeholder="描述" onchange="modi_updatebtn(this)"></textarea>
                             </div>
                           </form>
                             <div class="col-lg-2 col-candbtn">
@@ -183,12 +182,10 @@
                                 <input type="hidden" name="photo" value="<?php echo $row['photo'];?>" onchange="modi_updatebtn(this)">
                                 <button class="btn btn-sm btn-default" autocomplete="off" data-loading-text="上传中..." data-success-text="上传成功" data-error-text="上传失败" type="button" onclick="up_photo(this);">上传</button>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-8">
                                 <input type="text" class="form-control cand-name" value="<?php echo $row['name'];?>" placeholder="姓名" name="name" onchange="modi_updatebtn(this)" required>
+                                <input type="number" class="form-control cand-name" value="<?php echo $row['rank'];?>" placeholder="序号" name="rank" onchange="modi_updatebtn(this)" required>
                                 <textarea class="form-control" name="summary" rows="5" placeholder="简介" onchange="modi_updatebtn(this)"><?php echo $row['summary'];?></textarea>
-                            </div>
-                            <div class="col-lg-5">
-                                <textarea class="form-control" name="description" rows="7" placeholder="描述" onchange="modi_updatebtn(this)"><?php echo $row['description'];?></textarea>
                             </div>
                           </form>
                             <div class="col-lg-2 col-candbtn">
@@ -298,7 +295,7 @@
             if($upage>1) echo '<li><a href="'.url($cpage, $upage-1).'#user-panel">&laquo;</a></li>';
             else echo '<li class="disabled"><a>&laquo;</a></li>';
             for($i = $btnb; $i<=$btnb+4 && $i<=$utotle_page ; $i++){
-                echo $i==$upage ? '<li class="active"><a>'.$i.'</a></li>' : '<li class="active"><a href="'.url($cpage, $i).'#user-panel">'.$i.'</a></li>';
+                echo $i==$upage ? '<li class="active"><a>'.$i.'</a></li>' : '<li><a href="'.url($cpage, $i).'#user-panel">'.$i.'</a></li>';
             }
             if($upage<$utotle_page) echo '<li><a href="'.url($cpage,$upage+1).'#user-panel">&raquo;</a></li>';
             else echo '<li class="disabled"><a>&raquo;</a></li>';
@@ -379,7 +376,7 @@
                                 </table>
                             </div>
                             <div class="col-lg-2">
-                                <img class="img-thumbnail" src="qr.php?id=<?php echo $row['id'];?>">
+                                <a target="_blank" href="index.php?id=<?php echo $row['id'];?>"><img class="img-thumbnail" src="qr.php?id=<?php echo $row['id'];?>"></a>
                             </div>
                             </div>
                         </div>

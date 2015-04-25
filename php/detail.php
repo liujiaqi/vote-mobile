@@ -23,13 +23,13 @@
     <title><?php echo $parameter['title'];?></title>
 </head>
 <body style="background-color: #fbfbfb">
-    <header id="index_header"><a href="index.php" id="passage_header">&lt;返回</a>资料介绍</header>
+    <header id="index_header"><a href="index.php?id=<?php echo $res['vid'];?>" id="passage_header">&lt;返回</a>资料介绍</header>
     <section id="passage_header_body">
         <img width="143" height="204" src="photo/<?php echo $res['photo'];?>" id="passage_header_body_photo">
         <div class="passage_main_short_header"><?php echo $res['name'];?></div>
         <span class="passage_main_short_body">
             <strong>【个人简介】</strong><?php echo $res['summary'];?><br>
-            <strong>【详细资料】</strong><?php echo $res['description'];?>
+            <?php //if($res['description'] != "") echo "<strong>【详细资料】</strong>".$res['description'];?>
         </span>
     </section>
 </body>

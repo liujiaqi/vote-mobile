@@ -25,11 +25,11 @@
             case "addcand":
                 $name = poststr('name');
                 $summary = poststr('summary');
-                $description = poststr('description');
+                $rank = postint('rank');
                 $photo = poststr('photo');
                 $vid = postint('vid');
                 if($name == "") die("候选人姓名不能为空");
-                $sql = "insert into `candidate` (`name`,`summary`,`description`, `photo`, `vid`)  values('".$name."', '".$summary."', '".$description. "', '".$photo."', $vid)";
+                $sql = "insert into `candidate` (`name`,`summary`, `photo`,`rank`, `vid`)  values('".$name."', '".$summary."', '".$photo."', $rank, $vid)";
                 if(!query($sql)) die("添加候选人失败！");
                 else echo "T:".mysql_insert_id();
                 break;
@@ -38,11 +38,11 @@
                 $cid = postint('cid');
                 $name = poststr('name');
                 $summary = poststr('summary');
-                $description = poststr('description');
+                $rank = postint('rank');
                 $photo = poststr('photo');
                 if($name == "") die("候选人姓名不能为空");
                 
-                $sql = "update `candidate` set `name` = '".$name."', `summary` = '".$summary."', `description`='".$description."', `photo`='".$photo."' where id = $cid";
+                $sql = "update `candidate` set `name` = '".$name."', `summary` = '".$summary."', `photo`='".$photo."', `rank` = $rank where id = $cid";
                 
                 if(!query($sql)) die("修改候选人失败！");
                 else echo "T:".$cid;

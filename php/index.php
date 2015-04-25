@@ -129,14 +129,14 @@
     <script type="text/javascript">var total = <?php echo $parameter['total'];?>;</script>
     <section id="list_main">
         <ul>
-<?php   $result = query("select * from candidate where vid=$vid and state = 1");
+<?php   $result = query("select * from candidate where vid=$vid and state = 1 order  by rank");
         $first_cand = true;
         while($row = mysql_fetch_array($result)){?>
             <li<?php if($first_cand){ echo ' style="border: 0"';$first_cand=false;}?>>
-                <a class="list_main_photo"><img width="96" height="137" src="photo/<?php echo $row['photo'];?>"></a>
-                <div class="list_main_short">
-                    <div class="list_main_short_header"><?php echo $row['name'];?></div>
-                    <div class="list_main_short_body"><strong>【提要】</strong>：<?php echo limitStringLength($row['summary'],40);?><a href="detail.php?id=<?php echo $row['id'];?>" class="list_main_more">查看更多</a></div>
+                <a class="list_main_photo"><img <?php echo $vid==2? 'width="180" height="110"' : 'width="96" height="137"'?> src="photo/<?php echo $row['photo'];?>"></a>
+                <div class="list_main_short" <?php if($vid==2)echo 'style="margin-left:90px; width:45%;"';?> >
+                    <div class="list_main_short_header" <?php if($vid==2)echo 'style="font-size:20px;"';?>><?php echo $row['name'];?></div>
+                    <div class="list_main_short_body"><strong>【提要】</strong>：<?php echo limitStringLength($row['summary'],$vid==2?25:60);?><a href="detail.php?id=<?php echo $row['id'];?>" class="list_main_more">查看更多</a></div>
                 </div>
                 <div class="list_main_btn">
                     <a href="javascript:void(0)" class="list_main_btn_slide vote_select"></a>
